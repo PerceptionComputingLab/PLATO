@@ -1,7 +1,3 @@
-# Harbin Institute of Technology Bachelor Thesis
-# Author: HIT Michael_Bryant
-# Mail: 1137892110@qq.com
-
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 from tqdm import tqdm
@@ -21,7 +17,7 @@ from metadata_manager import *
 from utils.utils import *
 from utils.metrics import *
 from models.model_attention import load_model
-from models.MELT import MELT
+from models.PLATO import PLATO
 from dataloaders import *
 
 parser = argparse.ArgumentParser()
@@ -233,17 +229,17 @@ def train(
             evidence1_1 = torch.sigmoid(logits1)#Foreground Prob.
             evidence1_2 = 1 - evidence1_1#Background Prob.
             #[evidence1, evidence2] = logit map for 2-class softmax
-            evidence1_1 = F.softplus(evidence1_1)
+            evidence1_1 = F.exp(evidence1_1)
             alpha1_1 = evidence1_1 + 1 #Foreground Uncertainty
-            evidence1_2 = F.softplus(evidence1_2)
+            evidence1_2 = F.exp(evidence1_2)
             alpha1_2 = evidence1_2 + 1 #Background Uncertainty
 
             evidence2_1 = torch.sigmoid(logits2)#Foreground Prob.
             evidence2_2 = 1 - evidence2_1#Background Prob.
             #[evidence1, evidence2] = logit map for 2-class softmax
-            evidence2_1 = F.softplus(evidence2_1)
+            evidence2_1 = F.exp(evidence2_1)
             alpha2_1 = evidence2_1 + 1 #Foreground Uncertainty
-            evidence2_2 = F.softplus(evidence2_2)
+            evidence2_2 = F.exp(evidence2_2)
             alpha2_2 = evidence2_2 + 1 #Background Uncertainty
 
             loss_function = StochasticSegmentationNetworkLossMCIntegral(
@@ -359,7 +355,7 @@ def train(
                     "loss": loss,
                     "epoch": epoch + 1,
                 },
-                f"saved_models/{meta.directory_name}/Attention_Unet+MELT/best_model_Dice={min_Dice/(len(val_loader))}.pt",
+                f"saved_models/{meta.directory_name}/Attention_Unet+PLATO/best_model_Dice={min_Dice/(len(val_loader))}.pt",
             )
 
         print(f"Epoch {epoch+1} Finished")
@@ -434,9 +430,9 @@ if __name__ == "__main__":
     checkpoint = torch.load("/home/Michael_Bryant/ProbModelBaseline/saved_models/LIDC/Attention_Unet/best_model_Dice=0.6284789358861282.pt")
     atten_unet.load_state_dict(checkpoint["model_state_dict"])
 
-    melt = MELT(name = training_run_name).to(device)
+    plato = PLATO(name = training_run_name).to(device)
 
-    opt = optim.AdamW(melt.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    opt = optim.AdamW(plato.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     # Fetch Dataloaders
     train_loader, _ = get_dataloader_2(
@@ -450,7 +446,7 @@ if __name__ == "__main__":
     # Start Training
     train(
         atten_unet,
-        melt,
+        plato,
         resume_epoch,
         epochs,
         opt,
@@ -468,3 +464,4 @@ if __name__ == "__main__":
 
     print(f"Saved: {training_run_name} Data: {what_task} Model: SSN")
     # End Training Run
+
