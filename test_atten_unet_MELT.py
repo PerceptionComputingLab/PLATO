@@ -1,7 +1,3 @@
-# Harbin Institute of Technology Bachelor Thesis
-# Author: HIT Michael_Bryant
-# Mail: 1137892110@qq.com
-
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 from tqdm import tqdm
@@ -19,7 +15,7 @@ from utils.utils import *
 from utils.metrics import *
 from utils.loss import *
 from models.model_attention import load_model
-from models.MELT import MELT
+from models.PLATO import PLATO
 from dataloaders import *
 from logger import Logger
 import matplotlib.pyplot as plt
@@ -180,9 +176,9 @@ def test(net, model, load_weight_path, test_loader, save_image, sampling_times, 
                 Avg = Avg + P_mask[0].cpu().numpy()
                 evidence1_1 = torch.sigmoid(logits1)#Foreground Prob.
                 evidence1_2 = 1 - evidence1_1#Background Prob. #[evidence1, evidence2] = logit map for 2-class softmax
-                evidence1_1 = F.softplus(evidence1_1)
+                evidence1_1 = F.exp(evidence1_1)
                 alpha1_1 = evidence1_1 + 1 #Foreground Uncertainty
-                evidence1_2 = F.softplus(evidence1_2)
+                evidence1_2 = F.exp(evidence1_2)
                 alpha1_2 = evidence1_2 + 1 #Background Uncertainty
                 alpha_1.append(np.minimum(alpha1_1[0].cpu().numpy().transpose(1, 2, 0),alpha1_2[0].cpu().numpy().transpose(1, 2, 0)))
                 #alpha_1[i] = scale_array(alpha_1[i])
@@ -195,9 +191,9 @@ def test(net, model, load_weight_path, test_loader, save_image, sampling_times, 
                 Avg = Avg + P_mask[0].cpu().numpy()
                 evidence2_1 = torch.sigmoid(logits2)#Foreground Prob.
                 evidence2_2 = 1 - evidence2_1#Background Prob.#[evidence1, evidence2] = logit map for 2-class softmax
-                evidence2_1 = F.softplus(evidence2_1)
+                evidence2_1 = F.exp(evidence2_1)
                 alpha2_1 = evidence2_1 + 1 #Foreground Uncertainty
-                evidence2_2 = F.softplus(evidence2_2)
+                evidence2_2 = F.exp(evidence2_2)
                 alpha2_2 = evidence2_2 + 1 #Background Uncertainty
                 alpha_2.append(np.minimum(alpha2_1[0].cpu().numpy().transpose(1, 2, 0),alpha2_2[0].cpu().numpy().transpose(1, 2, 0)))
                 #alpha_2[i] = scale_array(alpha_2[i])
@@ -415,7 +411,7 @@ if __name__ == "__main__":
     checkpoint = torch.load("/home/Michael_Bryant/ProbModelBaseline/saved_models/LIDC/Attention_Unet/best_model_Dice=0.6284789358861282.pt")
     atten_unet.load_state_dict(checkpoint["model_state_dict"])
 
-    melt = MELT(name = testing_run_name).to(device)
+    plato = PLATO(name = testing_run_name).to(device)
 
     if what_task=="LIDC":
         test_loader, _ = get_dataloader_2(
@@ -431,4 +427,5 @@ if __name__ == "__main__":
     # Empty GPU Cache
     torch.cuda.empty_cache()
     # StartTesting
-    test(net=atten_unet, model=melt, load_weight_path=load_weight_path, test_loader=test_loader, save_image=save_image, sampling_times=sampling_times, AU=AU, EU=EU, avg=avg)
+    test(net=atten_unet, model=plato, load_weight_path=load_weight_path, test_loader=test_loader, save_image=save_image, sampling_times=sampling_times, AU=AU, EU=EU, avg=avg)
+
