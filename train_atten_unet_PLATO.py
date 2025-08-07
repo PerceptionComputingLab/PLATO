@@ -347,7 +347,7 @@ def train(
 
         if min_Dice <= sum_Dice:
             min_Dice = sum_Dice
-            os.makedirs(f"saved_models/{meta.directory_name}/Attention_Unet+MELT", exist_ok=True)
+            os.makedirs(f"saved_models/{meta.directory_name}/Attention_Unet+PLATO", exist_ok=True)
             torch.save(
                 {
                     "model_state_dict": model.state_dict(),
@@ -464,5 +464,6 @@ if __name__ == "__main__":
 
     print(f"Saved: {training_run_name} Data: {what_task} Model: SSN")
     # End Training Run
+
 
 
