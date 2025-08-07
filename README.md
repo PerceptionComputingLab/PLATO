@@ -6,6 +6,6 @@ Full code will be publicly available upon acceptence.
 
 ## Requirements
 You can install the required packages by executing the following command
-'''
+```
 pip install -r requirements.txt
-'''
+```
