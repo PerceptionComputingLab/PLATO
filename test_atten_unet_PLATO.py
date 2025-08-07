@@ -30,7 +30,7 @@ parser.add_argument(
 parser.add_argument(
     "--load_weight_path",
     type=str,
-    default="/home/Michael_Bryant/ProbModelBaseline/saved_models/LIDC/Attention_Unet+MELT/best_model_Dice=0.701498377965981.pt",
+    default="/home/Michael_Bryant/ProbModelBaseline/saved_models/LIDC/Attention_Unet+PLATO/best_model_Dice=0.701498377965981.pt",
     help="Path of the model to be tested.",
 )
 parser.add_argument(
@@ -428,4 +428,5 @@ if __name__ == "__main__":
     torch.cuda.empty_cache()
     # StartTesting
     test(net=atten_unet, model=plato, load_weight_path=load_weight_path, test_loader=test_loader, save_image=save_image, sampling_times=sampling_times, AU=AU, EU=EU, avg=avg)
+
 
