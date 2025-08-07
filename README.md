@@ -9,3 +9,6 @@ You can install the required packages by executing the following command
 ```
 pip install -r requirements.txt
 ```
+
+## Training
+You can train and test a PLATO module with pretrained model by running the codes.
