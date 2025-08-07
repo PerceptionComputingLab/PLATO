@@ -1,4 +1,4 @@
-import os
+import os 
 os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 from tqdm import tqdm
 import argparse
@@ -428,5 +428,6 @@ if __name__ == "__main__":
     torch.cuda.empty_cache()
     # StartTesting
     test(net=atten_unet, model=plato, load_weight_path=load_weight_path, test_loader=test_loader, save_image=save_image, sampling_times=sampling_times, AU=AU, EU=EU, avg=avg)
+
 
 
