@@ -1,7 +1,3 @@
-# Harbin Institute of Technology Bachelor Thesis
-# Author: HIT Michael_Bryant
-# Mail: 1137892110@qq.com
-
 import numpy as np
 import torch
 import torch.nn as nn
