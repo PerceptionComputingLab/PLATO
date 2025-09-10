@@ -118,21 +118,7 @@ class Network_Backbone(nn.Module):
         )
 
         shape = (batch_size,) + event_shape
-        logit_mean1 = mean1.view(shape)
-        cov_diag_view1 = cov_diag1.view(shape).detach()
-        cov_factor_view1 = (
-            cov_factor1.transpose(2, 1)
-            .view((batch_size, self.num_classes * self.rank) + event_shape[1:])
-            .detach()
-        )
-
-        logit_mean2 = mean2.view(shape)
-        cov_diag_view2 = cov_diag2.view(shape).detach()
-        cov_factor_view2 = (
-            cov_factor2.transpose(2, 1)
-            .view((batch_size, self.num_classes * self.rank) + event_shape[1:])
-            .detach()
-        )
+        ---
 
         output_dict = {
             "logit_mean1": logit_mean1.detach(),
@@ -146,3 +132,4 @@ class Network_Backbone(nn.Module):
         }
 
         return logit_mean1, logit_mean2, output_dict
+
