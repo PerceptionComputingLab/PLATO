@@ -27,11 +27,11 @@ python train_atten_unet.py --what LIDC --epochs 1000 --batchsize 64
 ```
 - Step 2: Train PLATO wth the segmentation backbone frozen:
 ```
-python train_atten_unet_MELT.py --what LIDC --epochs 200 --batchsize 64 
+python train_atten_unet_PLATO.py --what LIDC --epochs 200 --batchsize 64 
 ```
 ## Testing
 ```
-python test_atten_unet_MELT.py --what LIDC 
+python test_atten_unet_PLATO.py --what LIDC 
 ```
 
 ## Acknowledgements
