@@ -26,7 +26,7 @@ Please modify the dataset paths accordingly in `metadata_managr.py`
 python train_atten_unet.py --what LIDC --epochs 1000 --batchsize 64 
 ```
 Note: The `--what` argument specifies the dataset: `LIDC` for LIDC-IDRI, `isic3_style_concat` for the ISIC Subset, and `phc_style_concat` for PhC-U373.
-- Step 2: Train PLATO wth the segmentation backbone frozen:
+- Step 2: Train PLATO with the segmentation backbone frozen:
 ```
 python train_atten_unet_PLATO.py --what LIDC --epochs 200 --batchsize 64 
 ```
